@@ -59,13 +59,21 @@ namespace Dark.Io.Msg
             {
                 return null;
             }
-            byte[] bytes = new byte[Message.HEADER_SIZE];
+            /*byte[] bytes = new byte[Message.HEADER_SIZE];
             stream.CopyTo(bytes);
             int size = BitConverter.ToInt32(bytes, Message.HEADER_SIZE_OFFSET);
             if (stream.Len() < size + Message.HEADER_SIZE)
             {
                 return null;
+            }*/
+            byte[] bytes = new byte[4];
+            stream.CopyTo(Message.HEADER_SIZE_OFFSET,bytes);
+            int size = BitConverter.ToInt32(bytes,0);
+            if (stream.Len() < size + Message.HEADER_SIZE)
+            {
+                return null;
             }
+
             bytes = new byte[size + Message.HEADER_SIZE];
             stream.Read(bytes);
             return new Message(bytes);

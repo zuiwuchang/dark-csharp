@@ -39,7 +39,7 @@ namespace Dark.Bytes
             {
                 int free = GetFree();
                 int need = n;
-                if (n > free)
+                if (need > free)
                 {
                     need = free;
                 }
@@ -63,10 +63,31 @@ namespace Dark.Bytes
 
                 return need;
             }
+            //只 copy 數據 不 刪除緩衝區
             public int CopyTo(byte[] bytes, int start, int n)
             {
                 int need = n;
                 if (n > size)
+                {
+                    need = size;
+                }
+                Array.Copy(data, offset, bytes, start, need);
+
+                return need;
+            }
+            //跳過n字節 copy
+            public int CopyTo(int skip,byte[] bytes, int start, int n)
+            {
+                if (skip >= this.size)
+                {
+                    return 0;
+                }
+
+                int offset = this.offset + skip;
+                int size = this.size - skip;
+
+                int need = n;
+                if (need > size)
                 {
                     need = size;
                 }
@@ -150,6 +171,61 @@ namespace Dark.Bytes
             foreach (var fragmentation in fragmentations)
             {
                 int count = fragmentation.CopyTo(bytes, start, n);
+                n -= count;
+                start += count;
+                sum += count;
+
+                if (n < 1)
+                {
+                    break;
+                }
+            }
+            return sum;
+        }
+
+        public int CopyTo(int skip, byte[] bytes, int start, int n)
+        {
+            if (mutex == null)
+            {
+                return UnLockCopyTo(skip,bytes, start, n);
+            }
+            lock (mutex)
+            {
+                return UnLockCopyTo(skip,bytes, start, n);
+            }
+        }
+        public int CopyTo(int skip, byte[] bytes)
+        {
+            if (mutex == null)
+            {
+                return UnLockCopyTo(skip,bytes, 0, bytes.Length);
+            }
+            lock (mutex)
+            {
+                return UnLockCopyTo(skip,bytes, 0, bytes.Length);
+            }
+        }
+        protected int UnLockCopyTo(int skip,byte[] bytes, int start, int n)
+        {
+            if (bytes.Length < start + n)
+            {
+                throw new BufferException("Memory access violation on copy");
+            }
+
+            int sum = 0;
+            foreach (var fragmentation in fragmentations)
+            {
+                int need_skip = skip;
+                if (need_skip != 0)
+                {
+                    if (need_skip > fragmentation.Size)
+                    {
+                        need_skip = fragmentation.Size;
+                    }
+                    skip -= need_skip;
+                }
+
+                int count = fragmentation.CopyTo(need_skip,bytes, start, n);
                 n -= count;
                 start += count;
                 sum += count;

@@ -67,7 +67,7 @@ namespace Test_Bytes
             //
             Dark.Bytes.Buffer buf = new Dark.Bytes.Buffer(8);
             string str = "0123456789";
-            byte [] b = System.Text.Encoding.UTF8.GetBytes(str);
+            byte[] b = System.Text.Encoding.UTF8.GetBytes(str);
             Assert.IsTrue(buf.Write(b) == b.Length);
             Assert.IsTrue(buf.Len() == b.Length);
 
@@ -86,7 +86,7 @@ namespace Test_Bytes
                     need = len;
                 }
 
-                int n = buf.Read(bytes, offset,need);
+                int n = buf.Read(bytes, offset, need);
                 if (n < 1)
                 {
                     Assert.IsTrue(System.Text.Encoding.UTF8.GetString(bytes) == str);
@@ -97,6 +97,23 @@ namespace Test_Bytes
             }
 
             Assert.IsTrue(buf.Len() == 0);
+
+            //test copy
+            {
+                buf = new Dark.Bytes.Buffer(8);
+                str = "0123456789abcdefghijklmnopqrstwxz";
+                b = System.Text.Encoding.UTF8.GetBytes(str);
+                Assert.IsTrue(buf.Write(b) == b.Length);
+
+                b = new byte[b.Length];
+                buf.CopyTo(b);
+                Assert.IsTrue(System.Text.Encoding.UTF8.GetString(b) == str);
+
+               
+                int n= buf.CopyTo(3,b);
+                Assert.IsTrue(System.Text.Encoding.UTF8.GetString(b,0,n) == str.Substring(3,str.Length-3));
+
+            }
         }
     }
 }
