@@ -55,7 +55,7 @@ namespace Dark.Io.Msg
         }
         protected Message UnLockGetMsg()
         {
-            if (stream.Len() < Message.HEADER_SIZE)
+            if (stream.Len() < MessageConst.HEADER_SIZE)
             {
                 return null;
             }
@@ -67,14 +67,14 @@ namespace Dark.Io.Msg
                 return null;
             }*/
             byte[] bytes = new byte[4];
-            stream.CopyTo(Message.HEADER_SIZE_OFFSET,bytes);
+            stream.CopyTo(MessageConst.HEADER_SIZE_OFFSET, bytes);
             int size = BitConverter.ToInt32(bytes,0);
-            if (stream.Len() < size + Message.HEADER_SIZE)
+            if (stream.Len() < size + MessageConst.HEADER_SIZE)
             {
                 return null;
             }
 
-            bytes = new byte[size + Message.HEADER_SIZE];
+            bytes = new byte[size + MessageConst.HEADER_SIZE];
             stream.Read(bytes);
             return new Message(bytes);
         }

@@ -95,17 +95,17 @@ namespace Dark.Io.Msg
         protected Message UnLockCreateMsg(UInt32 id)
         {
             int sum = stream.Len();
-            byte[] data = new byte[sum + Message.HEADER_SIZE];
+            byte[] data = new byte[sum + MessageConst.HEADER_SIZE];
 
             Header header = new Header();
-            header.Flag = Message.HEADER_FLAG;
+            header.Flag = MessageConst.HEADER_FLAG;
             header.Id = id;
             header.Size = sum;
             header.GetBytes().CopyTo(data, 0);
 
             if (sum > 0)
             {
-                int offset = (int)Message.HEADER_SIZE;
+                int offset = (int)MessageConst.HEADER_SIZE;
                 stream.Read(data, offset, sum);
             }
 

@@ -5,6 +5,17 @@ using System.Text;
 using System.Runtime.InteropServices;
 namespace Dark.Io.Msg
 {
+    public class MessageConst
+    {
+        private MessageConst() { }
+        //消息頭標記
+        public static UInt32 HEADER_FLAG = 0x0000044E;
+        //消息頭長度
+        public static UInt32 HEADER_SIZE = 12;
+
+        public static Int32 HEADER_SIZE_OFFSET = 8;
+    }
+
     public class Header
     {
         //消息 標記
@@ -16,7 +27,7 @@ namespace Dark.Io.Msg
 
         public byte[] GetBytes()
         {
-            byte[] data = new byte[Message.HEADER_SIZE];
+            byte[] data = new byte[MessageConst.HEADER_SIZE];
             
             BitConverter.GetBytes(Flag).CopyTo(data, 0);
             BitConverter.GetBytes(Id).CopyTo(data, 4);
@@ -30,16 +41,9 @@ namespace Dark.Io.Msg
             return String.Format("Flag = {0}    Id = {1}    Size = {2}",Flag,Id,Size);
         }
     }
+    
     public sealed class Message
     {
-        //消息頭標記
-        public static UInt32 HEADER_FLAG = 0x0000044E;
-        //消息頭長度
-        public static UInt32 HEADER_SIZE = 12;
-
-        public static Int32 HEADER_SIZE_OFFSET = 8;
-
-
         public Message(byte[] data)
         {
             this.data = data;
@@ -58,14 +62,14 @@ namespace Dark.Io.Msg
         //返回 消息頭/null
         public Header GetHeader()
         {
-            if (data == null || data.Length < HEADER_SIZE)
+            if (data == null || data.Length < MessageConst.HEADER_SIZE)
             {
                 return null;
             }
             
             Header header = new Header();
             header.Flag = BitConverter.ToUInt32(data, 0);
-            if (header.Flag != HEADER_FLAG)
+            if (header.Flag != MessageConst.HEADER_FLAG)
             {
                 return null;
             }

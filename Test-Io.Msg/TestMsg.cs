@@ -62,7 +62,6 @@ namespace Test_Io.Msg
         [TestMethod]
         public void TestMethodMessage()
         {
-            
             //write
             Writer writer = new Writer(10);
             string str1 = "welcome to cerberus's server";
@@ -75,11 +74,11 @@ namespace Test_Io.Msg
 
             Header header = msg.GetHeader();
             byte[] b = msg.GetData();
-            string str = System.Text.Encoding.UTF8.GetString(b, (int)Message.HEADER_SIZE, (int)header.Size);
+            string str = System.Text.Encoding.UTF8.GetString(b, (int)MessageConst.HEADER_SIZE, (int)header.Size);
             Assert.IsTrue(str == str1 + str2);
 
             Assert.IsTrue(header.Id == 1 &&
-                header.Flag == Message.HEADER_FLAG &&
+                header.Flag == MessageConst.HEADER_FLAG &&
                 header.Size == str1.Length + str2.Length);
            
             //read
@@ -95,11 +94,11 @@ namespace Test_Io.Msg
             msg = writer.CreateMsg(2);
             header = msg.GetHeader();
             b = msg.GetData();
-            str = System.Text.Encoding.UTF8.GetString(b, (int)Message.HEADER_SIZE, (int)header.Size);
+            str = System.Text.Encoding.UTF8.GetString(b, (int)MessageConst.HEADER_SIZE, (int)header.Size);
             Assert.IsTrue(str == str1);
 
             Assert.IsTrue(header.Id == 2 &&
-                header.Flag == Message.HEADER_FLAG &&
+                header.Flag == MessageConst.HEADER_FLAG &&
                 header.Size == str1.Length);
 
             //read 2
@@ -112,11 +111,11 @@ namespace Test_Io.Msg
 
             header = m_0.GetHeader();
             b = m_0.GetData();
-            str = System.Text.Encoding.UTF8.GetString(b, (int)Message.HEADER_SIZE, (int)header.Size);
+            str = System.Text.Encoding.UTF8.GetString(b, (int)MessageConst.HEADER_SIZE, (int)header.Size);
             Assert.IsTrue(str == str1 + str2);
 
             Assert.IsTrue(header.Id == 1 &&
-                header.Flag == Message.HEADER_FLAG &&
+                header.Flag == MessageConst.HEADER_FLAG &&
                 header.Size == str1.Length + str2.Length);
 
 
@@ -127,11 +126,11 @@ namespace Test_Io.Msg
 
             header = m_1.GetHeader();
             b = m_1.GetData();
-            str = System.Text.Encoding.UTF8.GetString(b, (int)Message.HEADER_SIZE, (int)header.Size);
+            str = System.Text.Encoding.UTF8.GetString(b, (int)MessageConst.HEADER_SIZE, (int)header.Size);
             Assert.IsTrue(str == str1);
 
             Assert.IsTrue(header.Id == 2 &&
-                header.Flag == Message.HEADER_FLAG &&
+                header.Flag == MessageConst.HEADER_FLAG &&
                 header.Size == str1.Length);
 
 
