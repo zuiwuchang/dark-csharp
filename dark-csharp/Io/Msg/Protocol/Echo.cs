@@ -64,16 +64,32 @@ namespace Dark.Io.Msg.Protocol
         {
             return EchoConst.HASH;
         }
-
+        protected Object mutex = null;
+        public EchoHandler(Object mutex =null)
+        {
+            this.mutex = mutex;
+        }
 
         public bool Deal(System.Net.Sockets.Socket s, T info, Message msg)
         {
+            if (mutex == null)
+            {
+                return UnLockDeal(s, info, msg);
+ 
+            }
+            lock (mutex)
+            {
+                return UnLockDeal(s, info, msg);
+            }
+        }
+        protected bool UnLockDeal(System.Net.Sockets.Socket s, T info, Message msg)
+        {
             byte[] bytes = msg.GetData();
             string str = System.Text.Encoding.UTF8.GetString(msg.GetData(), ProtocolConst.BODY_OFFSET, bytes.Length - ProtocolConst.BODY_OFFSET);
-           
+
             //server deal
-            Console.WriteLine("recv {0} {1} :   {2}",s.RemoteEndPoint,info,str);
-            
+            Console.WriteLine("recv {0} {1} :   {2}", s.RemoteEndPoint, info, str);
+
             return true;
         }
     }
