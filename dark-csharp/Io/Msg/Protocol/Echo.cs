@@ -70,19 +70,10 @@ namespace Dark.Io.Msg.Protocol
         {
             byte[] bytes = msg.GetData();
             string str = System.Text.Encoding.UTF8.GetString(msg.GetData(), ProtocolConst.BODY_OFFSET, bytes.Length - ProtocolConst.BODY_OFFSET);
-
-            if (s == null)
-            {
-                //info == null
-                //client deal
-                Console.WriteLine("recv :   {0}",str);
-            }
-            else
-            {
-                //server deal
-                Console.WriteLine("recv {0} {1} :   {2}",s.RemoteEndPoint,info,str);
-            }
-
+           
+            //server deal
+            Console.WriteLine("recv {0} {1} :   {2}",s.RemoteEndPoint,info,str);
+            
             return true;
         }
     }
