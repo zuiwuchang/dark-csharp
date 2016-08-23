@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Bytes\Buffer.cs" />
     <Compile Include="Io\Msg\Protocol\Echo.cs" />
+    <Compile Include="Io\Msg\Protocol\File.cs" />
     <Compile Include="Io\Msg\Protocol\Protocol.cs" />
     <Compile Include="Io\Msg\Protocol\RouterDefault.cs" />
     <Compile Include="Io\Msg\Reader.cs" />

@@ -51,6 +51,46 @@ namespace Client
                         var msg = writer.CreateMsg(GetId());
                         client.PostMessage(msg);
                     }
+                    else if (cmd.StartsWith("upload", true, null))
+                    {
+                        string text = cmd.Substring(6).Trim();
+                        string[] names = text.Split(new char[] { '-' });
+                        if (names.Length < 3)
+                        {
+                            Console.WriteLine("params format error(upload -locak file -remote name)");
+                            continue;
+                        }
+
+                        string path = names[1];
+                        string name = names[2];
+                        if (path == "" || name == "")
+                        {
+                            Console.WriteLine("params format error(upload -locak file -remote name)");
+                            continue;   
+                        }
+
+                        Dark.Io.Msg.Protocol.FileWriter writer = new Dark.Io.Msg.Protocol.FileWriter();
+                        writer.WriteCreate(name);
+                        Dark.Io.Msg.Message msg = writer.CreateMsg(GetId());
+                        client.PostMessage(msg);
+
+                        using (System.IO.FileStream fr = System.IO.File.Open(path, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                        {
+                            byte[] bytes = new byte[1024];
+                            while (fr.Position < fr.Length)
+                            {
+                                int n = fr.Read(bytes, 0, bytes.Length);
+                                writer.WriteBinaryHeader();
+                                writer.WriteBinary(bytes, 0, n);
+                                msg = writer.CreateMsg(GetId());
+                                client.PostMessage(msg);
+                            }
+                        }
+
+                        writer.WriteOk();
+                        msg = writer.CreateMsg(GetId());
+                        client.PostMessage(msg);
+                    }
                     else
                     {
                         Console.WriteLine("not found command");

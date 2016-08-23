@@ -72,6 +72,39 @@ namespace Test_Io.Msg.Protocol
             writer.Write(bytes, 0, bytes.Length);
             Dark.Io.Msg.Message msg = writer.CreateMsg(1);
 
+            //Assert.IsTrue(router.Transmit(null, null, msg));
+        }
+
+        [TestMethod]
+        public void TestMethodProtocolFile()
+        {
+            Dark.Io.Msg.Protocol.RouterDefault<Object> router = new Dark.Io.Msg.Protocol.RouterDefault<Object>();
+
+            Dark.Io.Msg.Protocol.FileHandler<Object> handler = new Dark.Io.Msg.Protocol.FileHandler<Object>();
+            router.Register(handler);
+
+            UInt32 id = 0;
+
+            Dark.Io.Msg.Protocol.FileWriter writer = new Dark.Io.Msg.Protocol.FileWriter();
+            writer.WriteCreate("kate.txt");
+            Dark.Io.Msg.Message msg = writer.CreateMsg(id++);
+
+            Assert.IsTrue(router.Transmit(null, null, msg));
+
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes("kate is so sexy\n");
+            writer.WriteBinaryHeader();
+            writer.WriteBinary(bytes, 0, bytes.Length);
+            msg = writer.CreateMsg(id++);
+            Assert.IsTrue(router.Transmit(null, null, msg));
+
+            bytes = System.Text.Encoding.UTF8.GetBytes("i love kate");
+            writer.WriteBinaryHeader();
+            writer.WriteBinary(bytes, 0, bytes.Length);
+            msg = writer.CreateMsg(id++);
+            Assert.IsTrue(router.Transmit(null, null, msg));
+
+            writer.WriteOk();
+            msg = writer.CreateMsg(id++);
             Assert.IsTrue(router.Transmit(null, null, msg));
         }
     }

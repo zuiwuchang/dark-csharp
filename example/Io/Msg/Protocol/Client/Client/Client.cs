@@ -21,6 +21,7 @@ namespace Client
             router = new Dark.Io.Msg.Protocol.RouterDefault<Client>();
 
             router.Register(new Dark.Io.Msg.Protocol.EchoHandler<Client>());
+            router.Register(new Dark.Io.Msg.Protocol.FileHandler<Client>());
 
             msgs = new List<Dark.Io.Msg.Message>();
         }

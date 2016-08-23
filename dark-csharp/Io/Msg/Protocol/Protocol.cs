@@ -17,7 +17,7 @@ namespace Dark.Io.Msg.Protocol
         //返回 協議 唯一標識 32字節 的 字符串
         string Hash();
         //寫入 數據流
-        int Write(byte[] bytes, int start, int n);
+        //int Write(byte[] bytes, int start, int n);
         //用 已輸入數據流 生產一個協議消息
         Message CreateMsg(UInt32 id);
     }
